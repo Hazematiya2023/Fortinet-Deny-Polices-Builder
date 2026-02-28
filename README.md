@@ -1,75 +1,112 @@
-##
-<img width="687" height="842" alt="Screenshot 2025-12-31 201048" src="https://github.com/user-attachments/assets/d5408b91-4b8b-4c04-9e67-c59bf032e4ab" />
+# FortiGate Builder — Automated Policy & Address Tool
 
-##
-
-# Fortinet-Deny-Polices-Builder
-If you need to add mailous IP Addresses and create polices to deny them, this tool will help you to provide SOC T1 the custom tool with specifc user on your Fortinet Firewall to only add addresses and create deny polices on all incoming interfaces and outgoing interfaces if you not enable add multiuple interfaces polices feature..
-
-
-A powerful PowerShell automation wrapper for SSH connections and designed to simplify remote management, 
-> **Ideal for:** SOC Team T1 operations, or Help Desk team... 
-## 🌟 Features
-
-- **Native PowerShell Integration:** No need for external binaries (uses Posh-SSH).
-- **Secure Sessions:** Supports credential objects and key-based authentication.
-- **Bulk Execution:** Run commands on multiple targets seamlessly.
-- **Legacy Support:** Optimized instructions for Windows Server 2016 through 2022.
+> **Developed by Hazem Mohamed**
+> PowerShell GUI tool for automating FortiGate firewall policy creation over SSH, with built-in IP Reputation checking.
 
 ---
 
-## 📋 Prerequisites & Compatibility Matrix
+## ✨ Features
 
-Before running the tool, ensure your environment meets the following requirements. **This is critical for Windows Server 2016 users.**
-
-| OS Version | PowerShell Version | Required .NET Framework | Notes |
-| :--- | :--- | :--- | :--- |
-| **Windows Server 2016** | 5.1 | **4.7.2 or 4.8** (Required) | Default is 4.6 (Incompatible). Must update manually. |
-| **Windows Server 2019** | 5.1 | Default (4.7+) | Works out of the box. |
-| **Windows Server 2022** | 5.1 | Default (4.8) | Works out of the box. |
-| **Windows 10 / 11** | 5.1 / 7.x | Default (4.8) | Works out of the box. |
-
-### ⚠️ Critical Note for Windows Server 2016
-If you encounter the error: `Could not load file or assembly 'netstandard'`, you **must** install **.NET Framework 4.8 Runtime**.
-* [Download .NET Framework 4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48)
-* **Reboot is required** after installation.
+- 🔌 **SSH Connection** to FortiGate with credential support
+- 🌐 **SD-WAN Aware** — auto-detects SD-WAN and fetches zones instead of interfaces
+- 📋 **Address Management** — add subnet or FQDN objects in one click
+- 🔍 **IP Reputation Check** — free DNS-based blacklist lookup (no API key needed)
+- 🚫 **Deny Policy Creation** — auto-builds firewall deny policies across selected zones
+- ⬆️ **Move to Top** — automatically moves new policies to the top of the policy list
 
 ---
 
-## 🛠️ Installation
+## 🛡️ IP Reputation Engine
 
+The tool checks every IP address against **6 free DNS blacklists** before blocking:
 
-1. **Open PowerShell as Administrator.**
-3. **Install the Posh-SSH module:**
+| Blacklist | Description |
+|-----------|-------------|
+| Spamhaus ZEN | Combined spam/exploit/botnet list |
+| Barracuda | Email and network reputation |
+| SORBS SPAM | Spam sources database |
+| Blocklist.de | Attack/brute-force sources |
+| SpamCop | Community spam reporting |
+| UCEPROTECT L1 | Unsolicited commercial email sources |
+
+**No account. No API key. No login. Completely free.**
+
+Results are classified as:
+- `[MALICIOUS]` — Listed in 2 or more blacklists
+- `[SUSPICIOUS]` — Listed in 1 blacklist
+- `[CLEAN]` — Not found in any blacklist
+
+---
+
+## 🖥️ Requirements
+
+- Windows OS (Windows 10 / 11 / Server 2016+)
+- PowerShell 5.1 or later
+- [Posh-SSH module](https://github.com/darkoperator/Posh-SSH) installed:
 
 ```powershell
-Install-Module Posh-SSH -Force -AllowClobber
+Install-Module -Name Posh-SSH -Scope CurrentUser
 ```
 
-3.Import the module:
+---
 
-```powershell
+## 🚀 How to Use
 
-Import-Module Posh-SSH
+1. **Connect** — Enter FortiGate IP, username, and password → click `Connect`
+2. **Add Addresses** — Enter a name, select type (`subnet` or `fqdn`), enter value → click `Add`
+3. **Check Reputation** — Click `>> Check IP Reputation` before blocking
+4. **Fetch Zones** — Click `Fetch Zones/Interfaces` to load available interfaces
+5. **Select** — Check the source (Incoming) and destination (Outgoing) zones
+6. **Execute** — Click `EXECUTE` to push addresses and policies to FortiGate
+
+---
+
+## 📁 Project Structure
 
 ```
+FortiGate-Builder/
+│
+├── FortiGate_Builder_V9_SDWANFixed.ps1     # V9 — SD-WAN support
+├── FortiGate_Builder_V10_IPReputation.ps1  # V10 — IP Reputation edition
+└── README.md
+```
 
-## 🔧 Troubleshooting
+---
 
-Issue: Import-Module : Could not load file or assembly 'netstandard' ...
+## 📦 Releases
 
-Fix: Your .NET Framework is outdated (common on Server 2016). Please install .NET 4.8.
+### 🔖 v10.0 — IP Reputation Edition *(Latest)*
+- Added DNS-based IP reputation check (6 blacklists, free, no API key)
+- New reputation status bar with color-coded results
+- Warning prompt before EXECUTE if reputation check was skipped
+- Fixed all PowerShell encoding issues (removed emoji characters)
+- Improved Group 3 layout — button no longer overlaps status label
 
-Issue: Posh-SSH is not recognized.
+### 🔖 v9.0 — SD-WAN Fixed Edition
+- Full SD-WAN zone detection and support
+- Auto-fetches zones when SD-WAN is enabled
+- Falls back to regular interfaces when SD-WAN is disabled
+- Manual zone input field for edge cases
+- Move-to-Top policy ordering after creation
 
-Fix: Ensure your Execution Policy allows scripts:
-PowerShell
+---
 
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+## 📸 Screenshot
 
-## 🤝 Contributing
+> *FortiGate Builder V10 — IP Reputation Edition in action*
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-## 📜 License
+![FortiGate Builder V10 Screenshot](screenshot.png)
 
-MIT
+---
+
+## ⚠️ Disclaimer
+
+This tool is intended for **authorized network administrators** managing their own FortiGate devices.
+Do not use against systems you do not own or have explicit permission to manage.
+
+---
+
+## 📬 Contact
+
+**Hazem Mohamed**
+Feel free to open an [Issue](../../issues) or submit a [Pull Request](../../pulls) for suggestions or improvements.
