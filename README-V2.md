@@ -66,8 +66,8 @@ Install-Module -Name Posh-SSH -Scope CurrentUser
 ```
 FortiGate-Builder/
 │
-├── FortiGate_Builder_V9_SDWANFixed.ps1     # V9 — SD-WAN support
-├── FortiGate_Builder_V10_IPReputation.ps1  # V10 — IP Reputation edition
+├── FortiGate_Builder.ps1     # V1 
+├── FortiGate_Builder_V2.ps1  # V2 — IP Reputation edition
 └── README.md
 ```
 
@@ -75,19 +75,14 @@ FortiGate-Builder/
 
 ## 📦 Releases
 
-### 🔖 v10.0 — IP Reputation Edition *(Latest)*
+### 🔖 v2.0 — IP Reputation Edition *(Latest)*
 - Added DNS-based IP reputation check (6 blacklists, free, no API key)
 - New reputation status bar with color-coded results
 - Warning prompt before EXECUTE if reputation check was skipped
 - Fixed all PowerShell encoding issues (removed emoji characters)
 - Improved Group 3 layout — button no longer overlaps status label
 
-### 🔖 v9.0 — SD-WAN Fixed Edition
-- Full SD-WAN zone detection and support
-- Auto-fetches zones when SD-WAN is enabled
-- Falls back to regular interfaces when SD-WAN is disabled
-- Manual zone input field for edge cases
-- Move-to-Top policy ordering after creation
+
 
 ---
 
@@ -95,7 +90,9 @@ FortiGate-Builder/
 
 > *FortiGate Builder V10 — IP Reputation Edition in action*
 
-![FortiGate Builder V10 Screenshot](screenshot.png)
+<img width="702" height="969" alt="Screenshot 2026-03-01 011913" src="https://github.com/user-attachments/assets/c2724076-cafe-4964-a857-33dee94d90f7" />
+<img width="705" height="966" alt="Screenshot 2026-03-01 012007" src="https://github.com/user-attachments/assets/8864ab72-f4bb-4b2d-871f-648f3dad9c7f" />
+
 
 ---
 
